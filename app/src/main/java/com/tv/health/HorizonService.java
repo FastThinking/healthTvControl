@@ -5,17 +5,15 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.os.SystemClock;
-import android.util.Log;
 
-import com.tv.health.bean.Note;
-
-import org.greenrobot.eventbus.EventBus;
+import cn.iwgang.uptime.Config;
 
 /**
  * Created by allen on 2018/5/16 16:57.
  */
 public class HorizonService extends Service {
     Messenger mMessenger;
+    private long lastAlertTime;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -28,34 +26,23 @@ public class HorizonService extends Service {
             @Override
             public void run() {
                 super.run();
-//                if (mMessenger == null) {
-//                    mMessenger = (Messenger) intent.getExtras().get("messenger");
-//                }
-                long startTime = SystemClock.elapsedRealtime();
-                long s = startTime / 1000;
-                long h = s / (60 * 60);
-                long m = s % (60 * 60) / 60;
-                long second = s % 60;
-                StringBuffer time = new StringBuffer().append(h).append(":").append(m).append(":").append(second);
-//                Message message = Message.obtain();
-//                message.what = 1;
-//                message.obj = time.toString();
-                Log.e("HorizonService", "time.toString():" + time.toString());
-                EventBus.getDefault().post(new Note(time.toString()));
-//        try {
-//            mMessenger.send(message);
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        }
+                boolean expireLimited = false;
+                while (!expireLimited) {
+                    long startTime = SystemClock.elapsedRealtime();
+                    long m = startTime / (1000 * 60);
+                    if (m > Config.allowMinute) {
+                        long alertInternal = SystemClock.elapsedRealtime() - lastAlertTime;
+                        int minute = (int) (alertInternal / (1000 * 60));
+                        if (minute >= Config.alertInternalMinute) {
+                            Intent it = new Intent(getApplicationContext(), MainActivity.class);
+                            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(it);
+                            lastAlertTime = SystemClock.elapsedRealtime();
+                        }
+                    }
+                }
             }
         }.start();
-//        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        int five = 1000; // 这是1s
-//        long triggerAtTime = SystemClock.elapsedRealtime() + five;
-//        Intent i = new Intent(this, AlarmReceiver.class);
-//        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
-//        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
-//        manager.setRepeating();
         return super.onStartCommand(intent, flags, startId);
     }
 }

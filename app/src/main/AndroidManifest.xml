@@ -16,8 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--<service android:name=".HorizonService" />
-        <receiver android:name=".AlarmReceiver" />-->
+        <service android:name=".HorizonService" />
+        <!--<receiver android:name=".AlarmReceiver" />-->
         <receiver android:name=".ContentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

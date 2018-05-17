@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tv.health">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,12 +13,18 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <!--<service android:name=".HorizonService" />
         <receiver android:name=".AlarmReceiver" />-->
+        <receiver android:name=".ContentReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.category.LAUNCHER" />
+                <!--<action android:name="android.intent.category.HOME" />-->
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

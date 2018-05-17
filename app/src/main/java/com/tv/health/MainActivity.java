@@ -1,31 +1,32 @@
 package com.tv.health;
 
-import android.content.Intent;
+import android.app.AlertDialog;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
-
-import com.tv.health.bean.Note;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class MainActivity extends AppCompatActivity {
-    TextView tv_time;
+import cn.iwgang.countdownview.CountdownView;
+import cn.iwgang.uptime.Config;
+import cn.iwgang.uptime.TimeLimit;
+import cn.iwgang.uptime.UpTimeView;
 
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        tv_time = findViewById(R.id.tv_time);
         EventBus.getDefault().register(this);
-        Intent intent = new Intent(this, HorizonService.class);
-        intent.putExtra("messenger", new Messenger(mHandler));
-        startService(intent);
+        CountdownView mCvCountdownViewTest1 = (CountdownView) findViewById(R.id.cv_countdownViewTest1);
+        mCvCountdownViewTest1.setTag("test1");
+        long time1 = (long) (Config.allowHour * 60 * 60 * 1000);
+        mCvCountdownViewTest1.start(time1);
+
+        UpTimeView upTimeView = (UpTimeView) findViewById(R.id.utv);
+        upTimeView.setTag("test1");
+        upTimeView.start(time1);
     }
 
     @Override
@@ -34,26 +35,19 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    AlertDialog dialog;
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceive(Note note) {
-        String time = note.msg;
-        tv_time.setText(time);
-    }
-
-    private Handler mHandler = new Handler() {
-        // 接收结果，刷新界面
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-                    String time = (String) msg.obj;
-                    tv_time.setText(time);
-                    break;
-
-                default:
-                    break;
-            }
+    public void onMainTimeLimit(TimeLimit timeLimit) {
+        if (dialog == null) {
+            dialog = new AlertDialog.Builder(this)
+                    .setTitle("提示")
+                    .setMessage("已超过1.5小时")
+                    .setPositiveButton("确定", null)
+                    .create();
         }
-
-        ;
-    };
+        if (!dialog.isShowing()) {
+            dialog.show();
+        }
+    }
 }

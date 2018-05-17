@@ -1,7 +1,5 @@
 package com.tv.health;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -51,12 +49,13 @@ public class HorizonService extends Service {
 //        }
             }
         }.start();
-        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        int five = 1000; // 这是1s
-        long triggerAtTime = SystemClock.elapsedRealtime() + five;
-        Intent i = new Intent(this, AlarmReceiver.class);
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
-        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+//        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//        int five = 1000; // 这是1s
+//        long triggerAtTime = SystemClock.elapsedRealtime() + five;
+//        Intent i = new Intent(this, AlarmReceiver.class);
+//        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+//        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+//        manager.setRepeating();
         return super.onStartCommand(intent, flags, startId);
     }
 }

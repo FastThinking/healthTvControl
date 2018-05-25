@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -73,4 +75,55 @@ public class MainActivity extends AppCompatActivity {
             dialog.show();
         }
     }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        boolean isHandleToSys = true;
+        switch (keyCode) {
+            //模拟器测试时键盘中的的Enter键，模拟ok键（推荐TV开发中使用蓝叠模拟器）
+            case KeyEvent.KEYCODE_ENTER:
+                break;
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+                Toast("你按下中间键");
+                break;
+
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+                Toast("你按下下方向键");
+                break;
+
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+                Toast("你按下左方向键");
+                break;
+
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                Toast("你按下右方向键");
+                break;
+
+            case KeyEvent.KEYCODE_DPAD_UP:
+                Toast("你按下上方向键");
+                break;
+            case KeyEvent.KEYCODE_HOME:
+                Toast("你按下HOME键");
+                isHandleToSys = false;
+                break;
+            case KeyEvent.KEYCODE_BACK:
+                Toast("你按下返回键");
+                isHandleToSys = false;
+                break;
+            case KeyEvent.KEYCODE_MENU:
+                Toast("你按下菜单键");
+                isHandleToSys = false;
+                break;
+        }
+        if (isHandleToSys) {
+            return super.onKeyDown(keyCode, event);
+        } else {
+            return true;
+        }
+    }
+
+    private void Toast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
 }

@@ -7,9 +7,9 @@ public class Config {
     /**
      * 允许时间
      */
-    public static int allowMinute = 10;
+    public static int allowMinute = 60;
     /**
      * 提醒间隔
      */
-    public static int alertInternalMinute = 1;
+    public static int alertInternalMinute = 10;
 }

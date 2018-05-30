@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,17 +16,24 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.iwgang.uptime.Config;
 import cn.iwgang.uptime.TimeLimit;
 import cn.iwgang.uptime.UpTimeView;
 
 public class MainActivity extends AppCompatActivity {
+    @BindView(R.id.tv_alert)
     TextView tv_alert;
+
+    @BindView(R.id.iv_disable)
+    ImageView iv_disable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         long time1 = (long) (Config.allowMinute * 60 * 1000);
         UpTimeView upTimeView = (UpTimeView) findViewById(R.id.utv);
@@ -37,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
                 moveTaskToBack(true);
             }
         });
-
-        tv_alert = (TextView) findViewById(R.id.tv_alert);
+        iv_disable.setVisibility(View.GONE);
+        tv_alert.setVisibility(View.GONE);
         //启动后台服务
         Intent intent = new Intent(this, HorizonService.class);
 //        intent.putExtra("messenger", new Messenger(mHandler));
@@ -56,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMainTimeLimit(TimeLimit timeLimit) {
         tv_alert.setText("开机已超过" + Config.allowMinute + "分钟，请注意休息");
+        iv_disable.setVisibility(View.VISIBLE);
+        tv_alert.setVisibility(View.VISIBLE);
     }
 
     private void alert() {
@@ -74,6 +85,12 @@ public class MainActivity extends AppCompatActivity {
         if (!dialog.isShowing()) {
             dialog.show();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.w("keyCode", "keyCode is " + keyCode);
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

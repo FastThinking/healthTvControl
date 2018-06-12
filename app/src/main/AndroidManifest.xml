@@ -15,10 +15,16 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.MONKEY" />
             </intent-filter>
         </activity>
-        <service android:name=".HorizonService" />
+        <activity android:name=".view.ToastActivity" />
+
+        <service android:name=".CalulateTimeOutService" />
         <!--<receiver android:name=".AlarmReceiver" />-->
         <receiver android:name=".ContentReceiver">
             <intent-filter>

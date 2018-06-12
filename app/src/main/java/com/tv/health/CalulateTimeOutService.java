@@ -9,9 +9,10 @@ import android.os.SystemClock;
 import cn.iwgang.uptime.Config;
 
 /**
+ * 计算是否超出设置时间
  * Created by allen on 2018/5/16 16:57.
  */
-public class HorizonService extends Service {
+public class CalulateTimeOutService extends Service {
     Messenger mMessenger;
     private long lastAlertTime;
 
